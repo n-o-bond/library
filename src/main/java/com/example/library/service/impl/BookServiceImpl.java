@@ -68,7 +68,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findAllByTitle(String title) {
+    public List<Book> findAllBookByTitle(String title) {
         if (title.isBlank()){
             log.error("Title is null or empty!");
             throw new UnacceptableParameterValueException("Title is null or empty!");
@@ -77,7 +77,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Category create(Category category) {
+    public Category createCategory(Category category) {
         if (category == null){
             log.error("Category cannot be 'null'");
             throw new NullEntityReferenceException("Category cannot be 'null'");
@@ -86,7 +86,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Category findByName(String name) {
+    public Category findCategoryByName(String name) {
         checkIfCategoryIsBlank(name);
         return categoryRepository.findByName(name).orElseThrow(() -> {
             log.error(NOT_FOUND_CATEGORY_MESSAGE.formatted(name));
