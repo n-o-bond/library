@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>Update existing User</title>
+</head>
+<body>
+<div th:replace="header"></div>
+<div class="col-md-offset-2">
+    <h2>Update existing User</h2>
+</div>
+<div>
+    <form class="form-horizontal" th:object="${user}" th:action="@{/users/${user.id}/update}" method="post">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id">ID:</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:field="*{id}" id="id" type="number" th:value="*{id}" disabled/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="first-name">First name:</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" th:field="*{firstName}" id="first-name"/>
+                <small class="form-text text-muted" th:if="${#fields.hasErrors('firstName')}"
+                       th:errors="*{firstName}"></small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="last-name">Last name:</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" th:field="*{lastName}" id="last-name"/>
+                <small class="form-text text-muted" th:if="${#fields.hasErrors('lastName')}"
+                       th:errors="*{lastName}"></small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="login">E-mail:</label>
+            <div class="col-sm-8">
+                <input type="email" class="form-control" th:field="*{email}" id="login"/>
+                <small class="form-text text-muted" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="old-password">Old Password:</label>
+            <div class="col-sm-8">
+                <input required type="password" class="form-control" name="oldPassword" id="old-password">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="old-password">New Password:</label>
+            <div class="col-sm-8">
+                <input type="password" class="form-control" required th:field="*{password}" id="new-password"/>
+                <small class="form-text text-muted" th:if="${#fields.hasErrors('password')}"
+                       th:errors="*{password}"></small>
+            </div>
+        </div>
+        <div class="form-group" sec:authorize="hasAuthority('LIBRARIAN')">
+            <label class="col-sm-2 control-label" for="role">Role:</label>
+            <div class="col-sm-8">
+                <select class="form-control" name="roleId" id="role" th:number="${user.role}">
+                <span th:each="role : ${user.getRole().values()}">
+                    <option th:if="${role == user.role}" th:selected="${true}" th:text="${role.name.substring(0,1)
+                    + role.name.substring(1).toLowerCase()}" th:value="${role}"/>
+                    <option th:text="${role.name.substring(0,1) + role.name.substring(1).toLowerCase()}"
+                            th:unless="${role == user.role}" th:value="${role}"/>
+                </span>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-offset-2 col-sm-8">
+            <input class="btn btn-success" type="submit" value="Update"/>
+            <input class="btn btn" type="reset" value="Clear"/>
+            <input name="id" th:value="*{id}" type="hidden"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>
