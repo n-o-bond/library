@@ -19,6 +19,5 @@ public class BookDto {
     @NotBlank
     private String author;
     private String description;
-    @NotBlank
     private CategoryDto categoryDto;
 }

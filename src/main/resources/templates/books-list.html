@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>Books</title>
+</head>
+<body>
+<div th:replace="header"></div>
+<div class="col-md-offset-2 col-sm-8">
+    <h2>Books</h2>
+    <br>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col" colspan="3">Operations</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book, i : ${books}">
+            <th scope="row" th:text="${i.index + 1}"></th>
+            <td th:text="${book.id}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td>
+                <a th:href="@{|/books/${book.id}/read|}">Info</a>
+            </td>
+            <td sec:authorize="hasAuthority('LIBRARIAN')">
+                <a th:href="@{|/books/${book.id}/update/users/${#authentication.principal.id}|}">Edit</a>
+            </td>
+            <td sec:authorize="hasAuthority('LIBRARIAN')">
+                <a th:href="@{|/books/${book.id}/delete/users/${#authentication.principal.id}|}">Remove</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

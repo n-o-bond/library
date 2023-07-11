@@ -6,7 +6,7 @@
             <div class="navbar-header">
                 <a class="navbar-brand" th:href="@{/home}">Home page</a>
                 <a class="navbar-brand" th:href="@{|/books/categories/all|}">Categories</a>
-                <a class="navbar-brand" th:href="@{|/bools/all|}">Books</a>
+                <a class="navbar-brand" th:href="@{|/books/all|}">Books</a>
             </div>
             <form class="navbar-form navbar-right" sec:authorize="isAuthenticated()" th:action="@{/logout}"
                   method="post">

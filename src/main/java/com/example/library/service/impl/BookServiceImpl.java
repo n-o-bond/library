@@ -68,7 +68,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findAllBooksByTitle(String title) {
-        return title.isBlank() ? bookRepository.findAll() : bookRepository.findAllByTitle(title);
+        return title == null ? bookRepository.findAll() : bookRepository.findAllByTitle(title);
     }
 
     @Override

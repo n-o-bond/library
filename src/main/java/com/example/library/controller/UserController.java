@@ -45,7 +45,7 @@ public class UserController {
         return "redirect:/home";
     }
 
-    @PreAuthorize("hasAuthority('LIBRARIAN') or hasAuthority('USER') and authentication.principal.id == #id")
+    @PreAuthorize("hasAuthority('LIBRARIAN') or hasAuthority('USER') and authentication.principal.id == #userId")
     @GetMapping("/{userId}/read")
     public String readUser(@PathVariable("userId") UUID userId, Model model){
         User user = userService.read(userId);
@@ -54,7 +54,7 @@ public class UserController {
         return "user-info";
     }
 
-    @PreAuthorize("hasAuthority('LIBRARIAN') or hasAuthority('USER') and authentication.principal.id == #id")
+    @PreAuthorize("hasAuthority('LIBRARIAN') or hasAuthority('USER') and authentication.principal.id == #userId")
     @GetMapping("/{userId}/update")
     public String updateUser(@PathVariable("userId") UUID userId, Model model){
         User user = userService.read(userId);
@@ -63,7 +63,7 @@ public class UserController {
         return "user-update";
     }
 
-    @PreAuthorize("hasAuthority('LIBRARIAN') or hasAuthority('USER') and authentication.principal.id == #id")
+    @PreAuthorize("hasAuthority('LIBRARIAN') or hasAuthority('USER') and authentication.principal.id == #userId")
     @PostMapping("/{userId}/update")
     public String updateUser(@PathVariable("userId") UUID userId,
                          @Validated @ModelAttribute("user") UserDto userDto,
@@ -74,11 +74,12 @@ public class UserController {
         User oldUser = userService.read(userId);
         User newUser = userMapper.toEntity(userDto);
         newUser.setId(oldUser.getId());
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userService.update(newUser);
         return "redirect:/users/" + newUser.getId() + "/read";
     }
 
-    @PreAuthorize("hasAuthority('LIBRARIAN') or hasAuthority('USER') and authentication.principal.id == #id")
+    @PreAuthorize("hasAuthority('LIBRARIAN') or hasAuthority('USER') and authentication.principal.id == #userId")
     @GetMapping("/{userId}/delete")
     public String deleteUser(@PathVariable("userId") UUID userId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

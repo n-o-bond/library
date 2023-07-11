@@ -87,7 +87,7 @@ public class BookController {
     public String deleteBook(@PathVariable("userId") UUID userId,
                              @PathVariable("bookId") UUID bookId){
         bookService.delete(bookId);
-        return "redirect:/";
+        return "redirect:/books/all";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -100,7 +100,7 @@ public class BookController {
     }
 
     @PreAuthorize("hasAuthority('LIBRARIAN') and authentication.principal.id == #userId")
-    @GetMapping("/categories/users/{userId}")
+    @GetMapping("/categories/create/users/{userId}")
     public String createCategory(@PathVariable("userId") UUID userId,
                                  Model model){
         model.addAttribute("category", new CategoryDto());
@@ -108,7 +108,7 @@ public class BookController {
     }
 
     @PreAuthorize("hasAuthority('LIBRARIAN') and authentication.principal.id == #userId")
-    @PostMapping("/categories/users/{userId}")
+    @PostMapping("/categories/create/users/{userId}")
     public String createCategory(@PathVariable("userId") UUID userId,
                                  @Validated @ModelAttribute("category") CategoryDto categoryDto,
                                  BindingResult result){
@@ -117,7 +117,7 @@ public class BookController {
         }
         Category category = categoryMapper.toEntity(categoryDto);
         bookService.createCategory(category);
-        return "categories-list";
+        return "redirect:/books/categories/all";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -130,7 +130,7 @@ public class BookController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/categories/{categoryId}")
+    @GetMapping("/categories/{categoryId}/read")
     public String readCategory(@PathVariable("categoryId") UUID categoryId, Model model){
         Category category = bookService.readCategory(categoryId);
         CategoryDto categoryDto = categoryMapper.toDto(category);

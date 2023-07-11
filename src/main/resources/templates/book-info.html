@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>Info about Book</title>
+</head>
+<body>
+<div th:replace="header"></div>
+<div class="col-md-offset-2">
+    <div>
+        <h2>Info about Book</h2>
+        <table class="table">
+            <tr>
+                <td>Id:</td>
+                <td>
+                    <b th:text="${book.id}"></b>
+                </td>
+            </tr>
+            <tr>
+                <td>Title:</td>
+                <td>
+                    <b th:text="${book.title}"></b>
+                </td>
+            </tr>
+            <tr>
+                <td>Author:</td>
+                <td>
+                    <b th:text="${book.author}"></b>
+                </td>
+            </tr>
+            <tr>
+                <td>Description:</td>
+                <td>
+                    <b th:text="${book.description}"></b>
+                </td>
+            </tr>
+            <tr>
+                <td>Category:</td>
+                <td>
+                    <b th:text="${book.categoryDto}"></b>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <div sec:authorize="hasAuthority('LIBRARIAN')">
+            <a th:href="@{|/books/${book.id}/update/users/${#authentication.principal.id}|}">Edit</a>
+            <a th:href="@{|/books/${book.id}/delete/users/${#authentication.principal.id}|}">Remove</a>
+            </div>
+            <input name="bookId" th:value="*{book.id}" type="hidden"/>
+            <input name="userId" th:value="${#authentication.principal.id}" type="hidden">
+        </div>
+    </div>
+</div>
+</body>
+</html>
