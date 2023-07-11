@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>Home page</title>
+</head>
+<body>
+<div th:replace="header"></div>
+<div class="col-md-offset-2 col-sm-8">
+    <div align="center">
+        <h2>Welcome to the Library!</h2>
+        <br><br>
+        <div class="row">
+            <div class="col-xs-4">
+                <form th:action="@{|/books/create/users/${#authentication.principal.id}|}" method="get">
+                    <div sec:authorize="hasAuthority('LIBRARIAN')">
+                        <input class="btn-success btn-lg" type="submit" value="Create new Book">
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4">
+                <form th:action="@{|/books/categories/create/users/${#authentication.principal.id}|}" method="get">
+                    <div sec:authorize="hasAuthority('LIBRARIAN')">
+                        <input class="btn-success btn-lg" type="submit" value="Create new Category">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
