@@ -21,10 +21,9 @@ public class AuthManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Authentication webAuthentication;
-        for(AuthenticationProvider authenticationProvider : authenticationProviders){
+        for (AuthenticationProvider authenticationProvider : authenticationProviders) {
             webAuthentication = authenticationProvider.authenticate(authentication);
-            if(webAuthentication != null){
-                webAuthentication.setAuthenticated(true);
+            if (webAuthentication != null) {
                 return webAuthentication;
             }
         }

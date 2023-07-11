@@ -31,13 +31,13 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authResult) throws IOException {
         SecurityContextHolder.getContext().setAuthentication(authResult);
-        response.sendRedirect("/");
+        response.sendRedirect("/home");
     }
 
     @Override
     public void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                            AuthenticationException exception) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.sendRedirect("/login-form?error");
+        response.sendRedirect("/login?error");
     }
 }

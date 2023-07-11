@@ -12,7 +12,9 @@ public interface BookService {
     Book read(UUID id);
     Book update(Book book);
     void delete(UUID id);
-    List<Book> findAllBookByTitle(String title);
+    List<Book> findAllBooksByTitle(String title);
     Category createCategory(Category category);
-    Category findCategoryByName(String name);
+    List<Category> findCategoriesByName(String name);
+
+    Category readCategory(UUID id);
 }

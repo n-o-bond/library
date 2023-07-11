@@ -1,7 +1,6 @@
 package com.example.library.service.impl;
 
 import com.example.library.exception.NullEntityReferenceException;
-import com.example.library.exception.UnacceptableParameterValueException;
 import com.example.library.model.Book;
 import com.example.library.model.Category;
 import com.example.library.repository.BookRepository;
@@ -35,7 +34,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private static void checkIfBookIsNull(Book book) {
-        if (book == null){
+        if (book == null) {
             log.error(NULL_BOOK_MESSAGE);
             throw new NullEntityReferenceException(NULL_BOOK_MESSAGE);
         }
@@ -44,8 +43,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book read(UUID id) {
         return bookRepository.findById(id).orElseThrow(() -> {
-                log.error(NOT_FOUND_BOOK_MESSAGE.formatted(id));
-                throw new EntityNotFoundException(NOT_FOUND_BOOK_MESSAGE.formatted(id));
+            log.error(NOT_FOUND_BOOK_MESSAGE.formatted(id));
+            throw new EntityNotFoundException(NOT_FOUND_BOOK_MESSAGE.formatted(id));
         });
     }
 
@@ -68,17 +67,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findAllBookByTitle(String title) {
-        if (title.isBlank()){
-            log.error("Title is null or empty!");
-            throw new UnacceptableParameterValueException("Title is null or empty!");
-        }
-        return bookRepository.findAllByTitle(title);
+    public List<Book> findAllBooksByTitle(String title) {
+        return title.isBlank() ? bookRepository.findAll() : bookRepository.findAllByTitle(title);
     }
 
     @Override
     public Category createCategory(Category category) {
-        if (category == null){
+        if (category == null) {
             log.error("Category cannot be 'null'");
             throw new NullEntityReferenceException("Category cannot be 'null'");
         }
@@ -86,17 +81,21 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Category findCategoryByName(String name) {
-        checkIfCategoryIsBlank(name);
-        return categoryRepository.findByName(name).orElseThrow(() -> {
+    public List<Category> findCategoriesByName(String name) {
+        if (name == null || name.isEmpty()) {
+            return categoryRepository.findAll();
+        }
+        return List.of(categoryRepository.findByName(name).orElseThrow(() -> {
             log.error(NOT_FOUND_CATEGORY_MESSAGE.formatted(name));
             throw new EntityNotFoundException(NOT_FOUND_CATEGORY_MESSAGE.formatted(name));
-        });
+        }));
     }
 
-    private static void checkIfCategoryIsBlank(String name) throws UnacceptableParameterValueException {
-        if (name == null || name.isEmpty()) {
-            throw new UnacceptableParameterValueException("Category name is null or empty");
-        }
+    @Override
+    public Category readCategory(UUID id) {
+        return categoryRepository.findById(id).orElseThrow(() -> {
+            log.error("Category " + id + " was not found");
+            throw new EntityNotFoundException("Category " + id + " was not found");
+        });
     }
 }
