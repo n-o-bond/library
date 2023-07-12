@@ -14,7 +14,6 @@ public interface BookService {
     void delete(UUID id);
     List<Book> findAllBooksByTitle(String title);
     Category createCategory(Category category);
-    List<Category> findCategoriesByName(String name);
-
+    List<Category> getAllCategories();
     Category readCategory(UUID id);
 }

@@ -61,12 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(UUID id) {
-        userRepository.findById(id).ifPresentOrElse(user -> {
-            userRepository.delete(user);
-            log.info(USER_DELETED_MESSAGE.formatted(id));
-        }, () -> {
-            log.error(NOT_FOUND_USER_MESSAGE.formatted(id));
-            throw new EntityNotFoundException(NOT_FOUND_USER_MESSAGE.formatted(id));
-        });
+        userRepository.delete(read(id));
+        log.info(USER_DELETED_MESSAGE.formatted(id));
     }
 }

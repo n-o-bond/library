@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +23,6 @@ public class BookServiceImpl implements BookService {
     private static final String NULL_BOOK_MESSAGE = "Book cannot be 'null'";
     private static final String NOT_FOUND_BOOK_MESSAGE = "Book (id=UUID: %s) was not found";
     private static final String BOOK_DELETED_MESSAGE = "Book (id=UUID: %s) was deleted";
-    private static final String NOT_FOUND_CATEGORY_MESSAGE = "Category (name=%s) was not found";
 
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
@@ -57,18 +57,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void delete(UUID id) {
-        bookRepository.findById(id).ifPresentOrElse(book -> {
-            bookRepository.delete(book);
-            log.info(BOOK_DELETED_MESSAGE.formatted(id));
-        }, () -> {
-            log.error(NOT_FOUND_BOOK_MESSAGE.formatted(id));
-            throw new EntityNotFoundException(NOT_FOUND_BOOK_MESSAGE.formatted(id));
-        });
+        bookRepository.delete(read(id));
+        log.info(BOOK_DELETED_MESSAGE.formatted(id));
     }
 
     @Override
     public List<Book> findAllBooksByTitle(String title) {
-        return title == null ? bookRepository.findAll() : bookRepository.findAllByTitle(title);
+        return (title == null || title.isEmpty()) ? bookRepository.findAll() : bookRepository.findAllByTitle(title);
     }
 
     @Override
@@ -81,14 +76,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Category> findCategoriesByName(String name) {
-        if (name == null || name.isEmpty()) {
-            return categoryRepository.findAll();
-        }
-        return List.of(categoryRepository.findByName(name).orElseThrow(() -> {
-            log.error(NOT_FOUND_CATEGORY_MESSAGE.formatted(name));
-            throw new EntityNotFoundException(NOT_FOUND_CATEGORY_MESSAGE.formatted(name));
-        }));
+    public List<Category> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.isEmpty() ? new ArrayList<>() : categories;
     }
 
     @Override

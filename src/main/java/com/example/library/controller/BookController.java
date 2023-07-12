@@ -35,7 +35,7 @@ public class BookController {
     @GetMapping("/create/users/{userId}")
     public String createBook(@PathVariable("userId") UUID userId, Model model){
         model.addAttribute("book", new BookDto());
-        model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
+        model.addAttribute("categories", categoryMapper.toDtos(bookService.getAllCategories()));
         return "book-create";
     }
 
@@ -44,7 +44,7 @@ public class BookController {
     public String createBook(@PathVariable("userId") UUID userId, Model model,
                          @Validated @ModelAttribute("book") BookDto bookDto, BindingResult result){
         if(result.hasErrors()){
-            model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
+            model.addAttribute("categories", categoryMapper.toDtos(bookService.getAllCategories()));
             return "book-create";
         }
 
@@ -70,7 +70,7 @@ public class BookController {
         Book book = bookService.read(bookId);
         BookDto bookDto = bookMapper.toDto(book);
         model.addAttribute("book", bookDto);
-        model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
+        model.addAttribute("categories", categoryMapper.toDtos(bookService.getAllCategories()));
         return "book-update";
     }
 
@@ -80,7 +80,7 @@ public class BookController {
                              @PathVariable("bookId") UUID bookId, Model model,
                              @Validated @ModelAttribute("book") BookDto bookDto, BindingResult result){
         if(result.hasErrors()){
-            model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
+            model.addAttribute("categories", categoryMapper.toDtos(bookService.getAllCategories()));
             return "book-update";
         }
         Book oldBook = bookService.read(bookId);
@@ -134,10 +134,8 @@ public class BookController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/categories/all")
-    public String getAllCategories(Model model,
-                                   @Param("name") String name){
-        model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
-        model.addAttribute("name", name);
+    public String getAllCategories(Model model){
+        model.addAttribute("categories", categoryMapper.toDtos(bookService.getAllCategories()));
         return "categories-list";
     }
 
