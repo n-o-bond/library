@@ -21,7 +21,7 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category",  cascade = CascadeType.REMOVE)
     @Setter(AccessLevel.PRIVATE)
     @ToString.Exclude
     private List<Book> books = new ArrayList<>();

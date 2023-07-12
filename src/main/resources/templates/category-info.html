@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -9,7 +9,7 @@
 <div th:replace="header"></div>
 <div class="col-md-offset-2">
     <div>
-        <h2>Info about Book</h2>
+        <h2>Info about Category</h2>
         <table class="table">
             <tr>
                 <td>Id:</td>
@@ -24,10 +24,24 @@
                 </td>
             </tr>
         </table>
+
+        <br>
+        <h4>Books:</h4>
+        <br>
+        <table class="table">
+            <tbody>
+            <tr th:each="book, i : ${category.books}">
+                <td th:text="${i.index + 1}"></td>
+                <td th:text="${book.title + ' ' + book.author}"></td>
+            </tr>
+            </tbody>
+        </table>
+
         <div>
             <input name="categoryId" th:value="*{category.id}" type="hidden"/>
         </div>
     </div>
+
 </div>
 </body>
 </html>

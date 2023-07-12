@@ -12,22 +12,33 @@
 <div class="col-md-offset-2 col-sm-8">
     <h2>Books</h2>
     <br>
+    <form th:action="@{/books/all}" method="get">
+        <input style="border: 1px solid #dfe1e5; height: 35px; outline: none;" type="text" placeholder="The full title of the book" name="title" id="title" size="90px" th:value="${title}">
+        <input class="col-md-offset-1 btn-success btn-sm" type="submit" value="Search">
+        <input class="btn btn" type="button" value="Clear" id="btnClear" onclick="clearSearch()" />
+    </form>
+    <script type="text/javascript">
+        function clearSearch() {
+            window.location = "[[@{/books/all}]]";
+        }
+    </script>
+    <br>
     <table class="table">
         <thead>
         <tr>
             <th scope="col">No.</th>
-            <th scope="col">Id</th>
             <th scope="col">Title</th>
             <th scope="col">Author</th>
+            <th scope="col">Category</th>
             <th scope="col" colspan="3">Operations</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="book, i : ${books}">
             <th scope="row" th:text="${i.index + 1}"></th>
-            <td th:text="${book.id}"></td>
             <td th:text="${book.title}"></td>
             <td th:text="${book.author}"></td>
+            <td th:text="${book.category.name}"></td>
             <td>
                 <a th:href="@{|/books/${book.id}/read|}">Info</a>
             </td>

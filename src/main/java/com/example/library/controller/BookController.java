@@ -16,7 +16,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -32,14 +35,16 @@ public class BookController {
     @GetMapping("/create/users/{userId}")
     public String createBook(@PathVariable("userId") UUID userId, Model model){
         model.addAttribute("book", new BookDto());
+        model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
         return "book-create";
     }
 
     @PreAuthorize("hasAuthority('LIBRARIAN') and authentication.principal.id == #userId")
     @PostMapping("/create/users/{userId}")
-    public String createBook(@PathVariable("userId") UUID userId,
+    public String createBook(@PathVariable("userId") UUID userId, Model model,
                          @Validated @ModelAttribute("book") BookDto bookDto, BindingResult result){
         if(result.hasErrors()){
+            model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
             return "book-create";
         }
 
@@ -54,6 +59,7 @@ public class BookController {
         Book book = bookService.read(bookId);
         BookDto bookDto = bookMapper.toDto(book);
         model.addAttribute("book", bookDto);
+        model.addAttribute("categoryName", book.getCategory().getName());
         return "book-info";
     }
 
@@ -64,15 +70,17 @@ public class BookController {
         Book book = bookService.read(bookId);
         BookDto bookDto = bookMapper.toDto(book);
         model.addAttribute("book", bookDto);
+        model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
         return "book-update";
     }
 
     @PreAuthorize("hasAuthority('LIBRARIAN') and authentication.principal.id == #userId")
     @PostMapping("/{bookId}/update/users/{userId}")
     public String updateBook(@PathVariable("userId") UUID userId,
-                             @PathVariable("bookId") UUID bookId,
+                             @PathVariable("bookId") UUID bookId, Model model,
                              @Validated @ModelAttribute("book") BookDto bookDto, BindingResult result){
         if(result.hasErrors()){
+            model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
             return "book-update";
         }
         Book oldBook = bookService.read(bookId);
@@ -94,7 +102,11 @@ public class BookController {
     @GetMapping("/all")
     public String getAllBooks(Model model,
                               @Param("title") String title){
-        model.addAttribute("books", bookService.findAllBooksByTitle(title));
+        List<Book> books = bookService.findAllBooksByTitle(title).stream()
+                .sorted(Comparator.comparing(book -> book.getCategory().getName()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("books", books);
         model.addAttribute("title", title);
         return "books-list";
     }
@@ -124,7 +136,7 @@ public class BookController {
     @GetMapping("/categories/all")
     public String getAllCategories(Model model,
                                    @Param("name") String name){
-        model.addAttribute("categories", bookService.findCategoriesByName(name));
+        model.addAttribute("categories", categoryMapper.toDtos(bookService.findCategoriesByName("")));
         model.addAttribute("name", name);
         return "categories-list";
     }

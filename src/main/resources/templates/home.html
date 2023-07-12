@@ -9,24 +9,28 @@
 </head>
 <body>
 <div th:replace="header"></div>
-<div class="col-md-offset-2 col-sm-8">
-    <div align="center">
-        <h2>Welcome to the Library!</h2>
-        <br><br>
-        <div class="row">
-            <div class="col-xs-4">
-                <form th:action="@{|/books/create/users/${#authentication.principal.id}|}" method="get">
-                    <div sec:authorize="hasAuthority('LIBRARIAN')">
-                        <input class="btn-success btn-lg" type="submit" value="Create new Book">
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="text-center">
+                <h2>Welcome to the Library!</h2>
+                <br><br>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <form th:action="@{|/books/create/users/${#authentication.principal.id}|}" method="get">
+                            <div sec:authorize="hasAuthority('LIBRARIAN')">
+                                <button class="btn btn-success btn-lg btn-block" type="submit">Create new Book</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-            <div class="col-xs-4">
-                <form th:action="@{|/books/categories/create/users/${#authentication.principal.id}|}" method="get">
-                    <div sec:authorize="hasAuthority('LIBRARIAN')">
-                        <input class="btn-success btn-lg" type="submit" value="Create new Category">
+                    <div class="col-sm-6">
+                        <form th:action="@{|/books/categories/create/users/${#authentication.principal.id}|}" method="get">
+                            <div sec:authorize="hasAuthority('LIBRARIAN')">
+                                <button class="btn btn-success btn-lg btn-block" type="submit">Create new Category</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

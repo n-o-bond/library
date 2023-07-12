@@ -13,7 +13,8 @@
     <h2>Update existing User</h2>
 </div>
 <div>
-    <form class="form-horizontal" th:action="@{/users/{userId}/update(userId=${user.id})}" th:object="${user}" method="post">
+    <form class="form-horizontal" th:action="@{/users/{userId}/update(userId=${user.id})}" th:object="${user}"
+          method="post">
         <div class="form-group">
             <label class="col-sm-2 control-label" for="id">ID:</label>
             <div class="col-sm-8">
@@ -57,17 +58,14 @@
                        th:errors="*{password}"></small>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" sec:authorize="hasAuthority('LIBRARIAN')">
             <label class="col-sm-2 control-label" for="role">Role:</label>
             <div class="col-sm-8">
                 <select class="form-control" name="role" id="role" th:field="*{role}">
-                <span th:each="role : *{role.values()}">
-                    <option th:if="${role == user.role}" th:selected="${role == user.role}" th:text="${role.name.substring(0,1)
-                    + role.name.substring(1).toLowerCase()}" th:value="${role}"/>
-                    <option th:text="${role.name.substring(0,1) + role.name.substring(1).toLowerCase()}"
-                            th:unless="${role == user.role}" th:value="${role}"/>
-                </span>
+                    <option th:each="role : *{role.values()}" th:value="${role}"
+                            th:text="${role.name.substring(0,1) + role.name.substring(1).toLowerCase()}"></option>
                 </select>
+                <small class="form-text text-muted" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></small>
             </div>
         </div>
         <div class="col-sm-offset-2 col-sm-8">
